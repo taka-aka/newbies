@@ -1,0 +1,58 @@
+.app-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.left-panel {
+    width: 250px;
+}
+
+.right-panel {
+    flex-grow: 1;
+}
+
+.calendar-cell {
+    position: relative;
+    cursor: pointer;
+    height: 100px;
+    vertical-align: top;
+}
+
+.reminder-preview {
+    font-size: 0.75rem;
+    margin-top: 4px;
+    background-color: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+}
+
+.edit-btn, .delete-btn {
+    margin-left: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
