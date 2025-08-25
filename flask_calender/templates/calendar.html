@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>カレンダーアプリ</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+<style>
+    .calendar-table th, .calendar-table td {
+        width: 14.28%;
+        vertical-align: top;
+        height: 110px;
+        position: relative;
+        cursor: pointer;
+    }
+    /* 今日の日付セル強調 */
+    .today-cell {
+        background-color: #fff9c4; /* 薄い黄色 */
+        border: 2px solid #fbc02d;
+        font-weight: bold;
+    }
+    /* 曜日カラー */
+    .text-danger { color: red; }
+    .text-primary { color: blue; }
+    /* リマインダー表示 */
+    .reminder-item {
+        background-color: #e0f7fa;
+        border-radius: 3px;
+        padding: 2px 4px;
+        margin: 2px 0;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
+    /* 左上の今日情報 */
+    .today-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    #clickimage {
+        height: 50px;
+    }
+
+    /* モーダルの簡易スタイル */
+    .modal-bg {
+        display: none;
+        position: fixed;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-bg.active {
+        display: flex;
+    }
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 6px;
+        width: 300px;
+        max-width: 90%;
+    }
+    .modal-content input, .modal-content textarea {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body class="container my-4">
+
+    <!-- 左上 今日・ボーナス・うさぎ -->
+    <div class="today-info">
+        <h1>カレンダー</h1>
+        <img id="clickimage" src="{{ url_for('static', filename='img/usagi1.png') }}" alt="image of rabbit" />
+        <p>今日: <strong>{{ today }}</strong></p>
+        <p>ログインボーナス: {{ bonus }}</p>
+    </div>
+
+    <h2 class="text-center mb-4">{{ year }}年 {{ month_name }}（{{ month }}月）</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+        {% if month > 1 %}
+            <a class="btn btn-secondary" href="/?year={{ year }}&month={{ month - 1 }}">前月</a>
+        {% else %}
+            <a class="btn btn-secondary" href="/?year={{ year - 1 }}&month=12">前月</a>
+        {% endif %}
+
+        {% if month < 12 %}
+            <a class="btn btn-secondary" href="/?year={{ year }}&month={{ month + 1 }}">次月</a>
+        {% else %}
+            <a class="btn btn-secondary" href="/?year={{ year + 1 }}&month=1">次月</a>
+        {% endif %}
+    </div>
+
+    <table class="table table-bordered text-center calendar-table">
+        <thead>
+            <tr>
+                <th class="text-danger">日</th>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+                <th class="text-primary">土</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in month_days %}
+            <tr>
+                {% for day in week %}
+                    {% set i = loop.index0 %}
+                    {% if day == 0 %}
+                        <td></td>
+                    {% else %}
+                        <td
+                            class="{% if i == 0 %}text-danger{% elif i == 6 %}text-primary{% endif %} {% if today_day == day %}today-cell{% endif %}"
+                            data-day="{{ day }}">
+                            <div><strong>{{ day }}</strong></div>
+                            <div class="reminder-list" id="reminders-{{ day }}">
+                                {% if reminders and reminders[day] %}
+                                    {% for reminder in reminders[day] %}
+                                        <div class="reminder-item" data-day="{{ day }}" title="{{ reminder }}">
+                                            {{ reminder[:20] }}{% if reminder|length > 20 %}…{% endif %}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- モーダル：リマインダー編集・追加 -->
+    <div class="modal-bg" id="reminderModal">
+        <div class="modal-content">
+            <h4 id="modalTitle">リマインダーを追加</h4>
+            <textarea id="reminderText" rows="3" maxlength="100" placeholder="リマインダー内容（最大100文字）"></textarea>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-danger" id="deleteReminderBtn" style="display:none;">削除</button>
+                <button class="btn btn-secondary" id="cancelBtn">キャンセル</button>
+                <button class="btn btn-primary" id="saveBtn">保存</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+(() => {
+    const remindersData = {{ reminders | tojson }};
+    let currentDay = null;
+    let editingReminderIndex = null;
+
+    const modal = document.getElementById('reminderModal');
+    const reminderText = document.getElementById('reminderText');
+    const modalTitle = document.getElementById('modalTitle');
+    const deleteBtn = document.getElementById('deleteReminderBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const saveBtn = document.getElementById('saveBtn');
+
+    // Helper: 保存時にサーバーに送る処理は未実装。ローカルのみの簡易版
+
+    function openModal(day, reminderIndex = null) {
+        currentDay = day;
+        editingReminderIndex = reminderIndex;
+        if (reminderIndex !== null) {
+            // 編集モード
+            modalTitle.textContent = `リマインダー編集（${day}日）`;
+            reminderText.value = remindersData[day][reminderIndex];
+            deleteBtn.style.display = 'inline-block';
+        } else {
+            // 追加モード
+            modalTitle.textContent = `リマインダー追加（${day}日）`;
+            reminderText.value = '';
+            deleteBtn.style.display = 'none';
+        }
+        modal.classList.add('active');
+        reminderText.focus();
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        currentDay = null;
+        editingReminderIndex = null;
+        reminderText.value = '';
+    }
+
+    // カレンダーの日付セルクリック時の処理
+    document.querySelectorAll('.calendar-table td').forEach(td => {
+        td.addEventListener('click', e => {
+            const day = td.getAttribute('data-day');
+            if (!day) return;
+
+            // クリックされた箇所がリマインダーなら編集、そうでなければ追加
+            if (e.target.classList.contains('reminder-item')) {
+                const remindersForDay = remindersData[day] || [];
+                const reminderTextClicked = e.target.textContent;
+                const index = remindersForDay.findIndex(r => r.startsWith(reminderTextClicked));
+                if(index !== -1) {
+                    openModal(day, index);
+                }
+            } else {
+                openModal(day);
+            }
+        });
+    });
+
+    cancelBtn.addEventListener('click', closeModal);
+
+    deleteBtn.addEventListener('click', () => {
+        if (currentDay !== null && editingReminderIndex !== null) {
+            remindersData[currentDay].splice(editingReminderIndex, 1);
+            if (remindersData[currentDay].length === 0) {
+                delete remindersData[currentDay];
+            }
+            refreshReminders();
+            closeModal();
+        }
+    });
+
+    saveBtn.addEventListener('click', () => {
+        const text = reminderText.value.trim();
+        if (!text) {
+            alert('内容を入力してください');
+            return;
+        }
+        if (currentDay === null) return;
+
+        if (!remindersData[currentDay]) {
+            remindersData[currentDay] = [];
+        }
+
+        if (editingReminderIndex !== null) {
+            // 編集モード
+            remindersData[currentDay][editingReminderIndex] = text;
+        } else {
+            // 追加モード
+            remindersData[currentDay].push(text);
+        }
+        refreshReminders();
+        closeModal();
+    });
+
+    function refreshReminders() {
+        for (const day in remindersData) {
+            const container = document.getElementById(`reminders-${day}`);
+            if (container) {
+                container.innerHTML = '';
+                remindersData[day].forEach(text => {
+                    const div = document.createElement('div');
+                    div.className = 'reminder-item';
+                    div.textContent = text.length > 20 ? text.slice(0,20) + '…' : text;
+                    div.title = text;
+                    div.setAttribute('data-day', day);
+                    container.appendChild(div);
+                });
+            }
+        }
+    }
+
+})();
+</script>
+
+</body>
+</html>
