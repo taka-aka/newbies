@@ -1,24 +1,39 @@
-from flask import Flask, render_template, request,jsonify
+from flask import Flask, render_template, request, jsonify
 from backend.calendar_data import CalendarData
 from backend import manegeReminder
 from datetime import date
+import calendar
 
 app = Flask(__name__)
 data = CalendarData()
 
-today = date.today().isoformat()
+today = date.today()
 data.add_bonus(today)
 
 @app.route("/")
 def index():
+    year = request.args.get('year', type=int) 
+    month = request.args.get('month', type=int)
     bonus = data.get_bonus(today)
-    return render_template("index.html", bonus=bonus, today=today)
+    cal = calendar.Calendar(firstweekday=6) #日曜始まりの週
+    month_days = cal.monthdayscalendar(year, month) #その月の日付
+    month_name = calendar.month_name[month]
+    today_cell = today.day if (year == today.year and month == today.month) else None
+    if not year or not month:
+        year = today.year
+        month = today.month
+
+    return render_template("index.html", 
+                           year=year,
+                           month=month,
+                           month_name=month_name,
+                           month_days=month_days,
+                           bonus=bonus,
+                           today=today,
+                           today_cell = today_cell,
+                           reminders={}
+                           )
     
-# @app.route("/get_todayReminders")
-# def get_todayReminders():
-#     reminders = manegeReminder.load_reminders()
-#     todayList = [r for r in reminders if r["date"] == str(today)]
-#     return jsonify(todayList)
 
 @app.route("/get_reminders")
 def get_reminders():

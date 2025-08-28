@@ -1,20 +1,160 @@
-p {
-  color:orange;
+.today-cell {
+  background-color: #fff9c4; /* 薄い黄色 */
+  border: 2px solid #fbc02d;
+  font-weight: bold;
 }
 
-/* 追加用モーダル全体の背景 */
+.text-danger { color: red; }
+.text-primary { color: blue; }
+
+.app-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.left-panel {
+  width: 250px;
+}
+
+.right-panel {
+  flex-grow: 1;
+}
+
+.calendar-cell {
+  position: relative;
+  cursor: pointer;
+  height: 100px;
+  vertical-align: top;
+}
+
+.reminder-preview {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  background-color: #f8f9fa;
+  padding: 2px 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content-box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.edit-btn, .delete-btn {
+  margin-left: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.calendar-table th, .calendar-table td {
+  width: 14.28%;
+  vertical-align: top;
+  height: 110px;
+  position: relative;
+  cursor: pointer;
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 100px; /* ボタン間のスペース */
+    margin-bottom: 10px;
+}
+
+.calendar-table {
+    margin-left: auto;
+}
+
+
+/* リマインダー表示 */
+.reminder-item {
+  background-color: #e0f7fa;
+  border-radius: 3px;
+  padding: 2px 4px;
+  margin: 2px 0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+/* 左上の今日情報 */
+.today-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+
+/* モーダルの簡易スタイル */
+.modal-bg {
+  display: none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+}
+.modal-bg.active {
+  display: flex;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  width: 300px;
+  max-width: 90%;
+}
+.modal-content input, .modal-content textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.calendar-box {
+    width: 300px;
+    height: 300px;
+    overflow: auto; /* 内容がはみ出たらスクロール */
+}
+
+.calendar-title {
+    font-size: 1.2rem;
+}
+
+/* 
 .create-modal {
-  display: none; /* 最初は非表示 */
+  display: none; 
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5); /* 半透明背景 */
+  background-color: rgba(0,0,0,0.5); 
   justify-content: center;
   align-items: center;
 }
-/* モーダルの中身 */
+
 .create-modal .modal-content {
   background: #fff;
   padding: 20px;
@@ -28,19 +168,18 @@ p {
   margin-top: 10px;
 }
 
-/* 削除用モーダル全体の背景 */
 .delete-modal {
-  display: none; /* 最初は非表示 */
+  display: none; 
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5); /* 半透明背景 */
+  background-color: rgba(0,0,0,0.5); 
   justify-content: center;
   align-items: center;
 }
-/* モーダルの中身 */
+
 .delete-modal .modal-content {
   display: flex;
   flex-direction: column;
@@ -48,11 +187,10 @@ p {
   padding: 20px;
   border-radius: 10px;
   width: 300px;
-  /* text-align: center; */
 }
 .delete-modal button {
   margin-top: 10px;
 }
 #closeDeleBtn{
   align-self: flex-end;
-}
+} */
