@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダーアプリ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <h1>カレンダー</h1>
+    <p>今日: <a id="today">{{ today }}</a></p>
+    <h2>今日の予定</h2>
+    <ul id="todayList"></ul>
+    <p>ログインボーナス: {{ bonus }}</p>
+    <!-- <button id="creReminder">リマインダーを作る</button> -->
+    <!-- 追加用モーダル -->
+    <!-- <div id="reminderModal" class="create-modal">0
+        <div class="modal-content">
+            <h2>リマインダー作成</h2>
+            <input type="text" id="reminderText" placeholder="内容を入力..."><br>
+            <input type="date" id="reminderDate" placeholder="YYYY-MM-DD"><br>
+            <input type="time" id="reminderTime" placeholder="HH:MM"><br>
+            <button id="saveBtn">保存</button>
+            <button id="closeBtn">閉じる</button>
+        </div>
+    </div>
+    <button id="deleReminder">リマインダーを消す</button> -->
+    <!-- 削除用モーダル -->
+    <!-- <div id="deleteModal" class="delete-modal">
+      <div class="modal-content">
+        <h2>削除するリマインダーを選んでください</h2>
+        <div id="deleteList"></div>
+        <button id="closeDeleBtn">閉じる</button>
+      </div>
+    </div> -->
+    
+
+    <!-- <h2>リスト</h2> -->
+    <!-- <ul id="reminderList"></ul> -->
+
+    <div class="app-container">
+  <!-- 左側：うさぎ画像 -->
+  <div class="left-panel">
+    <img id="clickimage" src="{{ url_for('static', filename='img/usagi1.png') }}" alt="image of rabbit">
+  </div>
+
+  <!-- 右側：カレンダー全体 -->
+  <div class="right-panel">
+    <div class="calendar-nav">
+      <h2 class="text-center mb-4">{{ year }}年 {{ month_name }}（{{ month }}月）</h2>
+
+      {% if month > 1 %}
+        <a class="btn btn-secondary" href="/?year={{ year }}&month={{ month - 1 }}">前月</a>
+      {% else %}
+        <a class="btn btn-secondary" href="/?year={{ year - 1 }}&month=12">前月</a>
+      {% endif %}
+
+      {% if month < 12 %}
+        <a class="btn btn-secondary" href="/?year={{ year }}&month={{ month + 1 }}">次月</a>
+      {% else %}
+        <a class="btn btn-secondary" href="/?year={{ year + 1 }}&month=1">次月</a>
+      {% endif %}
+    </div>
+
+    <table class="table table-bordered text-center calendar-table">
+        <thead>
+            <tr>
+                <th class="text-danger">日</th>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+                <th class="text-primary">土</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in month_days %}
+            <tr>
+                {% for day in week %}
+                    {% set i = loop.index0 %}
+                    {% if day == 0 %}
+                        <td></td>
+                    {% else %}
+                        <td
+                            class="{% if i == 0 %}text-danger{% elif i == 6 %}text-primary{% endif %} {% if today_cell == day %}today-cell{% endif %}"
+                            data-day="{{ day }}">
+                            <div><strong>{{ day }}</strong></div>
+                            <div class="reminder-list" id="reminders-{{ day }}">
+                                {% if reminders and reminders[day] %}
+                                    {% for reminder in reminders[day] %}
+                                        <div class="reminder-item" data-day="{{ day }}" title="{{ reminder }}">
+                                            {{ reminder[:20] }}{% if reminder|length > 20 %}…{% endif %}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- モーダル：リマインダー編集・追加 -->
+    <div class="modal-bg" id="reminderModal">
+        <div class="modal-content">
+            <h4 id="modalTitle">リマインダーを追加</h4>
+            <textarea id="reminderText" rows="3" maxlength="100" placeholder="リマインダー内容（最大100文字）"></textarea>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-danger" id="deleteReminderBtn" style="display:none;">削除</button>
+                <button class="btn btn-secondary" id="cancelBtn">キャンセル</button>
+                <button class="btn btn-primary" id="saveBtn">保存</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
