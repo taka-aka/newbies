@@ -76,10 +76,11 @@
                         <td></td>
                     {% else %}
                         <td
-                            class="{% if i == 0 %}text-danger{% elif i == 6 %}text-primary{% endif %} {% if today_cell == day %}today-cell{% endif %}"
-                            data-day="{{ day }}">
+                            class="{% if i == 0 %}text-danger{% elif i == 6 %}text-primary{% endif %}
+                            {% if today_cell == day %}today-cell{% endif %}"
+                            data-date="{{ year }}-{{ '%02d' % month }}-{{ '%02d' % day }}">
                             <div><strong>{{ day }}</strong></div>
-                            <div class="reminder-list" id="reminders-{{ day }}">
+                            <div class="reminder-list" id="reminders-{{ year }}-{{ '%02d' % month }}-{{ '%02d' % day }}">
                                 {% if reminders and reminders[day] %}
                                     {% for reminder in reminders[day] %}
                                         <div class="reminder-item" data-day="{{ day }}" title="{{ reminder }}">
@@ -102,7 +103,7 @@
             <h4 id="modalTitle">リマインダーを追加</h4>
             <textarea id="reminderText" rows="3" maxlength="100" placeholder="リマインダー内容（最大100文字）"></textarea>
             <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-danger" id="deleteReminderBtn" style="display:none;">削除</button>
+                <button class="btn btn-danger" id="deleteReminderBtn">削除</button>
                 <button class="btn btn-secondary" id="cancelBtn">キャンセル</button>
                 <button class="btn btn-primary" id="saveBtn">保存</button>
             </div>
