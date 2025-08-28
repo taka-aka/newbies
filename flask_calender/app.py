@@ -8,7 +8,7 @@ app = Flask(__name__)
 def index():
     year = request.args.get('year', type=int) 
     month = request.args.get('month', type=int)
-    today = datetime.today()
+    today = datetime.today
 
     # デフォルトの今月のカレンダー
     if not year or not month:
