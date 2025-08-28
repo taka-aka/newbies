@@ -152,119 +152,119 @@
     </div>
 
 <script>
-(() => {
-    const remindersData = {{ reminders | tojson }};
-    let currentDay = null;
-    let editingReminderIndex = null;
+// (() => {
+    // const remindersData = {{ reminders | tojson }};
+    // let currentDay = null;
+    // let editingReminderIndex = null;
 
-    const modal = document.getElementById('reminderModal');
-    const reminderText = document.getElementById('reminderText');
-    const modalTitle = document.getElementById('modalTitle');
-    const deleteBtn = document.getElementById('deleteReminderBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const saveBtn = document.getElementById('saveBtn');
+    // const modal = document.getElementById('reminderModal');
+    // const reminderText = document.getElementById('reminderText');
+    // const modalTitle = document.getElementById('modalTitle');
+    // const deleteBtn = document.getElementById('deleteReminderBtn');
+    // const cancelBtn = document.getElementById('cancelBtn');
+    // const saveBtn = document.getElementById('saveBtn');
 
     // Helper: 保存時にサーバーに送る処理は未実装。ローカルのみの簡易版
 
-    function openModal(day, reminderIndex = null) {
-        currentDay = day;
-        editingReminderIndex = reminderIndex;
-        if (reminderIndex !== null) {
-            // 編集モード
-            modalTitle.textContent = `リマインダー編集（${day}日）`;
-            reminderText.value = remindersData[day][reminderIndex];
-            deleteBtn.style.display = 'inline-block';
-        } else {
-            // 追加モード
-            modalTitle.textContent = `リマインダー追加（${day}日）`;
-            reminderText.value = '';
-            deleteBtn.style.display = 'none';
-        }
-        modal.classList.add('active');
-        reminderText.focus();
-    }
+    // function openModal(day, reminderIndex = null) {
+    //     currentDay = day;
+    //     editingReminderIndex = reminderIndex;
+    //     if (reminderIndex !== null) {
+    //         // 編集モード
+    //         modalTitle.textContent = `リマインダー編集（${day}日）`;
+    //         reminderText.value = remindersData[day][reminderIndex];
+    //         deleteBtn.style.display = 'inline-block';
+    //     } else {
+    //         // 追加モード
+    //         modalTitle.textContent = `リマインダー追加（${day}日）`;
+    //         reminderText.value = '';
+    //         deleteBtn.style.display = 'none';
+    //     }
+    //     modal.classList.add('active');
+    //     reminderText.focus();
+    // }
 
-    function closeModal() {
-        modal.classList.remove('active');
-        currentDay = null;
-        editingReminderIndex = null;
-        reminderText.value = '';
-    }
+    // function closeModal() {
+    //     modal.classList.remove('active');
+    //     currentDay = null;
+    //     editingReminderIndex = null;
+    //     reminderText.value = '';
+    // }
 
     // カレンダーの日付セルクリック時の処理
-    document.querySelectorAll('.calendar-table td').forEach(td => {
-        td.addEventListener('click', e => {
-            const day = td.getAttribute('data-day');
-            if (!day) return;
+    // document.querySelectorAll('.calendar-table td').forEach(td => {
+    //     td.addEventListener('click', e => {
+    //         const day = td.getAttribute('data-day');
+    //         if (!day) return;
 
-            // クリックされた箇所がリマインダーなら編集、そうでなければ追加
-            if (e.target.classList.contains('reminder-item')) {
-                const remindersForDay = remindersData[day] || [];
-                const reminderTextClicked = e.target.textContent;
-                const index = remindersForDay.findIndex(r => r.startsWith(reminderTextClicked));
-                if(index !== -1) {
-                    openModal(day, index);
-                }
-            } else {
-                openModal(day);
-            }
-        });
-    });
+    //         // クリックされた箇所がリマインダーなら編集、そうでなければ追加
+    //         if (e.target.classList.contains('reminder-item')) {
+    //             const remindersForDay = remindersData[day] || [];
+    //             const reminderTextClicked = e.target.textContent;
+    //             const index = remindersForDay.findIndex(r => r.startsWith(reminderTextClicked));
+    //             if(index !== -1) {
+    //                 openModal(day, index);
+    //             }
+    //         } else {
+    //             openModal(day);
+    //         }
+    //     });
+    // });
 
-    cancelBtn.addEventListener('click', closeModal);
+    // cancelBtn.addEventListener('click', closeModal);
 
-    deleteBtn.addEventListener('click', () => {
-        if (currentDay !== null && editingReminderIndex !== null) {
-            remindersData[currentDay].splice(editingReminderIndex, 1);
-            if (remindersData[currentDay].length === 0) {
-                delete remindersData[currentDay];
-            }
-            refreshReminders();
-            closeModal();
-        }
-    });
+    // deleteBtn.addEventListener('click', () => {
+    //     if (currentDay !== null && editingReminderIndex !== null) {
+    //         remindersData[currentDay].splice(editingReminderIndex, 1);
+    //         if (remindersData[currentDay].length === 0) {
+    //             delete remindersData[currentDay];
+    //         }
+    //         refreshReminders();
+    //         closeModal();
+    //     }
+    // });
 
-    saveBtn.addEventListener('click', () => {
-        const text = reminderText.value.trim();
-        if (!text) {
-            alert('内容を入力してください');
-            return;
-        }
-        if (currentDay === null) return;
+//     saveBtn.addEventListener('click', () => {
+//         const text = reminderText.value.trim();
+//         if (!text) {
+//             alert('内容を入力してください');
+//             return;
+//         }
+//         if (currentDay === null) return;
 
-        if (!remindersData[currentDay]) {
-            remindersData[currentDay] = [];
-        }
+//         if (!remindersData[currentDay]) {
+//             remindersData[currentDay] = [];
+//         }
 
-        if (editingReminderIndex !== null) {
-            // 編集モード
-            remindersData[currentDay][editingReminderIndex] = text;
-        } else {
-            // 追加モード
-            remindersData[currentDay].push(text);
-        }
-        refreshReminders();
-        closeModal();
-    });
+//         if (editingReminderIndex !== null) {
+//             // 編集モード
+//             remindersData[currentDay][editingReminderIndex] = text;
+//         } else {
+//             // 追加モード
+//             remindersData[currentDay].push(text);
+//         }
+//         refreshReminders();
+//         closeModal();
+//     });
 
-    function refreshReminders() {
-        for (const day in remindersData) {
-            const container = document.getElementById(`reminders-${day}`);
-            if (container) {
-                container.innerHTML = '';
-                remindersData[day].forEach(text => {
-                    const div = document.createElement('div');
-                    div.className = 'reminder-item';
-                    div.textContent = text.length > 20 ? text.slice(0,20) + '…' : text;
-                    div.title = text;
-                    div.setAttribute('data-day', day);
-                    container.appendChild(div);
-                });
-            }
-        }
-    }
+//     function refreshReminders() {
+//         for (const day in remindersData) {
+//             const container = document.getElementById(`reminders-${day}`);
+//             if (container) {
+//                 container.innerHTML = '';
+//                 remindersData[day].forEach(text => {
+//                     const div = document.createElement('div');
+//                     div.className = 'reminder-item';
+//                     div.textContent = text.length > 20 ? text.slice(0,20) + '…' : text;
+//                     div.title = text;
+//                     div.setAttribute('data-day', day);
+//                     container.appendChild(div);
+//                 });
+//             }
+//         }
+//     }
 
-})();
+// })();
 </script>
 
 </body>
