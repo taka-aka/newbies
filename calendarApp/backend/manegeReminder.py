@@ -15,11 +15,12 @@ def save_reminders(reminders):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(reminders, f, ensure_ascii=False, indent=2)
 
-def add_reminder(text, date, time):
+def add_reminder(text, date):
     """リマインダーを追加"""
     reminders = load_reminders()
-    new_id = max([r["id"] for r in reminders], default=0) + 1
-    reminder = {"id": new_id, "text": text, "date": date, "time": time}
+    new_id = max([r.get("id", 0) for r in reminders], default=0) + 1
+    # new_id = max([r["id"] for r in reminders], default=0) + 1
+    reminder = {"id": new_id, "text": text, "date": date}
     reminders.append(reminder)
     save_reminders(reminders)
     return reminders
