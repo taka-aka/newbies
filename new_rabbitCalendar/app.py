@@ -1,14 +1,17 @@
 from flask import Flask, render_template, request, jsonify
 from backend.calendar_data import CalendarData
 from backend import manegeReminder
-from datetime import date
+from datetime import date, datetime
 import calendar
+from backend import likeData
+
 
 app = Flask(__name__)
 data = CalendarData()
 
 today = date.today()
 data.add_bonus(today)
+thistime = datetime.now().strftime("%H:%M:%S")  # 現在時刻を文字列に
 
 @app.route("/")
 def index():
@@ -30,6 +33,7 @@ def index():
                            month_days=month_days,
                            bonus=bonus,
                            today=today,
+                           thistime=thistime,
                            today_cell = today_cell,
                            reminders={}
                            )
@@ -84,6 +88,22 @@ def update_reminder():
             return jsonify({"status": "success", "reminders": reminders})
 
     return jsonify({"status": "error", "message": "指定IDのリマインダーが見つかりません"}), 400
+
+##### うさぎの好感度 #############################
+@app.route("/get_like")
+def get_like():
+    like = likeData.load_like()
+    return jsonify({"like": like})
+
+@app.route("/increase_like", methods=["POST"])
+def increase_like():
+    data = request.get_json()
+    amount = data.get("amount", 0)
+    current = likeData.load_like()
+    new_like = current + amount
+    likeData.save_like(new_like)
+    return jsonify({"like": new_like})
+
 
 
 if __name__ == "__main__":
