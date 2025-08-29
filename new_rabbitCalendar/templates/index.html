@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>カレンダーアプリ</title>
+  <title>うさぎカレンダー</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/usagi_icon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='rabbitSystem.js') }}"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
   <h1>カレンダー</h1>
-  <p>今日: <a id="today">{{ today }}</a></p>
+  <p>今日: <a id="today">{{ today }} {{ thistime }}</a></p>
 
   <h2>今日の予定</h2>
   <ul id="todayList"></ul>
@@ -19,8 +21,13 @@
   <div class="app-container">
     <!-- 左パネル -->
     <div class="left-panel">
-      <img id="clickimage" src="{{ url_for('static', filename='img/usagi1.png') }}" alt="image of rabbit">
+      <img id="clickimage" src="{{ url_for('static', filename='img/usagi_normal.png') }}" alt="image of rabbit">
       <div id="rabbitMessage" class="rabbit-message"></div>
+      <div id="like-container">
+        <span id="like-label">うさぎの好感度：</span>
+        <span id="like-display">♡0</span>
+      </div>
+
     </div>
 
     <!-- 右パネル -->
