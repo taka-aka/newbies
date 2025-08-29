@@ -10,6 +10,39 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveBtn = document.getElementById('saveBtn');
     const msgBox = document.getElementById("rabbitMessage");
 
+    // 今日の予定だけを #todayList に表示
+    async function showTodayReminders() {
+  try {
+    const res = await fetch("/get_reminders");
+    const reminders = await res.json();
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    const todayList = document.getElementById("todayList");
+    todayList.innerHTML = ''; // 一旦リセット
+
+    const todaysReminders = reminders.filter(r => r.date === todayStr);
+    sortList(todaysReminders);
+
+    if (todaysReminders.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "今日の予定はありません。";
+      todayList.appendChild(li);
+    } else {
+      todaysReminders.forEach(r => {
+        const li = document.createElement("li");
+        li.textContent = `${r.time} - ${r.text}`;
+        todayList.appendChild(li);
+      });
+    }
+  } catch (err) {
+    console.error("今日の予定の取得に失敗しました", err);
+  }
+}
+
     // ページ読み込み時に取得
     async function loadReminders() {
       const res = await fetch("/get_reminders");
@@ -17,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       refreshReminders();
     }
     loadReminders();
+    showTodayReminders();
 
     const imgList = [ 
       ["/static/img/usagi_hozon.png", "/static/img/usagi_uwagaki.png", "/static/img/usagi_delete.png"],
@@ -155,6 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
               }
               await refreshReminders();
+              await showTodayReminders();
               closeModal();
 
             } else {
@@ -207,6 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
             increaseLike(1);
             change_img(0,0);
             change_reminderMsg(0);
+            await showTodayReminders(); 
           } else {
             alert("保存に失敗しました: " + data.message);
           }
