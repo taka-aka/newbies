@@ -5,12 +5,14 @@ from datetime import date, datetime
 import calendar
 from backend import likeData, token_db,  notification_check, manegeReminder, notification_system
 import time
+from apscheduler.schedulers.background import BackgroundScheduler
+schedulers = BackgroundScheduler()
 
 
 
 app = Flask(__name__)
 data = CalendarData()
-notification_check.start()
+notification_check.startNotification(schedulers)
 
 today = date.today()
 data.add_bonus(today)
@@ -122,7 +124,7 @@ def send_token():
     token_db.save_token(token)
     
     
-    notification_system.send_notification(token,"wawawa","テストだよ") 
+    # notification_system.send_notification(token,"wawawa","テストだよ") 
     return jsonify({"status": "success", "message": "プッシュ通知を送信しました"})
 
 # @app.route('/push_test', methods=["GET"])

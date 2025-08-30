@@ -26,11 +26,12 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
 
-  const notificationTitle = payload.notification.title;
+  // payload.dataが存在するかチェック
+  const notificationTitle = payload.data?.title || "通知";
   const notificationOptions = {
-    body: payload.notification.body,
-    // icon: '/images/icon.png' // アイコン画像のパス
+    body: payload.data?.body || "",
+    icon: "/static/img/usagi_what.png", // アイコン画像のパス
   };
 
-  // self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });

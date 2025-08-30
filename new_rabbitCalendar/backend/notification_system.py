@@ -13,30 +13,27 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 
 # See documentation on defining a message payload.
-def send_notification(token: str, title: str, body: str):
+icon_url = "http://localhost:5000/static/img/usagi_what.png"  # ここに使いたい画像のURLを指定
+def send_notification(token: str, title: str, body: str, icon_url: str = None):
     try:
+        notification_kwargs = {
+            "title": title,
+            "body": body
+        }
+        if icon_url:
+            notification_kwargs["icon"] = icon_url
+
         message = messaging.Message(
-        #  notification=messaging.Notification(
-        #      title='title',
-        #      body='ああ',
-        #  ),
-        
-        token=token,
-        webpush=messaging.WebpushConfig(
-            headers={
-                "TTL": "3600"
-            },
-            notification=messaging.WebpushNotification(
-                title=title,
-                body=body
+            token=token,
+            webpush=messaging.WebpushConfig(
+                headers={
+                    "TTL": "3600"
+                },
+                data= notification_kwargs
             )
         )
-    )
 
-         # Send a message to the device corresponding to the provided
-         # registration token.
         response = messaging.send(message)
-         # Response is a message ID string.
         print('Successfully sent message:', response)
     except Exception as e:
         print("Failed to send notification:", e)
