@@ -5,7 +5,7 @@ from datetime import date, datetime
 import calendar
 from backend import likeData
 import random
-
+from backend import login_info
 
 app = Flask(__name__)
 data = CalendarData()
@@ -16,6 +16,7 @@ thistime = datetime.now().strftime("%H:%M:%S")  # 現在時刻を文字列に
 
 @app.route("/")
 def index():
+    login_streak = login_info.update_streak()
     year = request.args.get('year', type=int) or today.year
     month = request.args.get('month', type=int) or today.month
     bonus = data.get_bonus(today)
@@ -54,6 +55,7 @@ def index():
                            thistime=thistime,
                            today_cell = today_cell,
                            reminders={},
+                           login_streak=login_streak,
                            stamps=stamp_dict
                            )
     
