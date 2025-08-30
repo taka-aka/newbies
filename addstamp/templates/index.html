@@ -26,6 +26,10 @@
   <img id="clickimage" src="{{ url_for('static', filename='img/usagi_normal.png') }}" alt="image of rabbit">
   
   <div id="rabbitMessage" class="rabbit-message"></div>
+
+  <div class="login-streak-box">
+  <p>🎯 連続ログイン日数：<strong>{{ login_streak }}</strong> 日</p>
+  </div>
   
   <div id="like-container">
     <span id="like-label">うさぎの好感度：</span>
