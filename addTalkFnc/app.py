@@ -11,7 +11,22 @@ today = date.today()
 
 @app.route("/")
 def index():
-    login_streak = login_info.update_streak()
+    streak, flag = login_info.update_streak()
+
+    login_message = None
+    if streak > 1:
+        login_message = f"{streak}日ログインだよ！すごーい！"
+        login_img = "static/img/usagi_log.png"
+    elif streak == 1:
+        if flag == 1:
+            login_message = "さぼっちゃったね…😢 また一緒にがんばろう！"
+            login_img = "static/img/usagi_cry.png"
+        else:
+            login_message = "初ログイン！がんばって続けようね！"
+            login_img = "static/img/usagi_welcome.png"
+
+    login_message = login_message or ''
+    
     year = request.args.get('year', type=int) or today.year
     month = request.args.get('month', type=int) or today.month
     cal = calendar.Calendar(firstweekday=6) #日曜始まりの週
@@ -29,7 +44,9 @@ def index():
                            month_days=month_days,
                            today=today,
                            today_cell = today_cell,
-                           login_streak=login_streak,
+                           login_streak=streak,
+                           login_message=login_message,
+                           login_img=login_img,
                            reminders={}
                            )
     
@@ -117,4 +134,3 @@ def set_name():
 if __name__ == "__main__":
     app.run(debug=True)
 
-#### ログイン情報 ##########################################
