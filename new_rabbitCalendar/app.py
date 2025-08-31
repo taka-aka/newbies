@@ -1,13 +1,18 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from backend.calendar_data import CalendarData
-from backend import manegeReminder
+# from backend import manegeReminder
 from datetime import date, datetime
 import calendar
-from backend import likeData
+from backend import likeData, token_db,  notification_check, manegeReminder, notification_system
+import time
+from apscheduler.schedulers.background import BackgroundScheduler
+schedulers = BackgroundScheduler()
+
 
 
 app = Flask(__name__)
 data = CalendarData()
+notification_check.startNotification(schedulers)
 
 today = date.today()
 data.add_bonus(today)
@@ -104,7 +109,31 @@ def increase_like():
     likeData.save_like(new_like)
     return jsonify({"like": new_like})
 
+@app.route('/firebase-messaging-sw.js')
+def service_worker():
+    return send_from_directory('static', 'firebase-messaging-sw.js')
 
+@app.route('/send_token', methods=["POST"])
+def send_token():
+    #リクエストの内容がrequestに入ってる
+    data = request.json
+    token = data.get('token')
+    print("Received token:", token)
+    if token is None:
+        return jsonify({"status": "error", "message": "tokenが指定されていません"}), 400
+    token_db.save_token(token)
+    
+    
+    # notification_system.send_notification(token,"wawawa","テストだよ") 
+    return jsonify({"status": "success", "message": "プッシュ通知を送信しました"})
+
+# @app.route('/push_test', methods=["GET"])
+# def Push_test():
+    
+#     token_data= token_db.load_tokens()
+    
+#     notification_system.send_notification(token_data,"wawawa","テストだよ") 
+#     return jsonify({"status": "success", "message": "プッシュ通知を送信しました"})
 
 if __name__ == "__main__":
     app.run(debug=True)
