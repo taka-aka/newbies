@@ -23,7 +23,9 @@
   <div class="app-container">
     <!-- 左パネル -->
 <div class="left-panel">
-  <img id="clickimage" src="{{ url_for('static', filename='img/usagi_normal.png') }}" alt="image of rabbit">
+  <div id="rabbitMessage2" class="rabbit-message">{{ login_message if login_message else "（メッセージなし）" }}</div>
+  
+  <img id="clickimage" src="{{ login_img }}" alt="image of rabbit">
   
   <div id="rabbitMessage" class="rabbit-message"></div>
   
@@ -159,15 +161,15 @@
 <a id="changeNameBtn" class="btn btn-primary">名前を変更する</a>
 
 <!-- 吹き出しアイコン -->
-<a id="talkBtn" class="btn btn-primary">おはなし</a>
+<a id="talkBtn" class="btn btn-primary">おはなしする</a>
 
 <!-- Talkモーダル -->
 <div id="talkModal" class="modal hidden">
   <div class="modal-content">
-    <img src="{{ url_for('static', filename='img/usagi_normal.png') }}" alt="うさぎ" class="usagi-img" />
+    <img src="" alt="うさぎ" id="usagi-img" />
     <div id="talkMessage" class="talk-message"></div>
     <div id="talkOptions" class="talk-options"></div>
-    <a id="closeTalkBtn" class="btn btn-primary">✖</a>
+    <a id="closeTalkBtn" class="btn btn-primary">TAP</a>
   </div>
 </div>
 </body>

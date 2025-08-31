@@ -6,7 +6,7 @@ FILE_PATH = "login_info.json"
 
 def load_data():
     if not os.path.exists(FILE_PATH):
-        return {"last_login": None, "streak": 0}
+        return {"last_login": None, "streak": 1, "flag":0}
     with open(FILE_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -23,9 +23,12 @@ def update_streak():
         pass  # 同じ日なら何もしない
     elif last_login == today - timedelta(days=1):
         data["streak"] += 1  # 前日とつながってる
+    elif last_login == None:
+        data["streak"] = 1 #初回
     else:
-        data["streak"] = 1  # 初回 or 飛んでたらリセット
+        data["flag"] = 1  # 飛んでたらリセット
+        data["streak"] = 1
 
     data["last_login"] = today.isoformat()
     save_data(data)
-    return data["streak"]
+    return data["streak"], data["flag"]
