@@ -1,14 +1,27 @@
 {
-  "low": [
-    { "text": "こんにちは！", "options": null },
-    { "text": "遊んでくれる？", "options": ["はい", "いいえ"] }
-  ],
   "mid": [
-    { "text": "やっほー！調子どう？", "options": ["元気！", "まあまあ…"] },
-    { "text": "もっと仲良くなりたいな！", "options": null }
+    {
+      "text": "...きまずいね",
+      "img": "/static/img/usagi_normal.png",
+      "options": null
+    }
   ],
   "high": [
-    { "text": "大好き！ずっと一緒にいたいな～", "options": null },
-    { "text": "明日も遊んでくれる？", "options": ["もちろん！", "たぶん…"] }
+    {
+      "text": "ぼく、にんじんがだいすきなんだー",
+      "img": "/static/img/usagi_normal.png",
+      "options": null
+    },
+    {
+      "text": "おいしくてえいようもまんてんなんだよ！",
+      "img": "/static/img/usagi_happy.png",
+      "options": null
+    },
+    {
+      "text": "あなたも、にんじんすきならいいな",
+      "img": "/static/img/usagi_what.png",
+      "options": null
+    }
   ]
 }
+

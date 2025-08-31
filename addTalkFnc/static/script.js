@@ -11,18 +11,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const imgList = [ 
       ["/static/img/usagi_hozon.png", "/static/img/usagi_uwagaki.png", "/static/img/usagi_delete.png"],
-      ["/static/img/usagi_normal.png", "/static/img/usagi_good.png", "/static/img/usagi_sleep.png", "/static/img/usagi_what.png"],//好感度0~9
-      ["/static/img/usagi_relax.png",  "/static/img/usagi_clean.png", "/static/img/usagi_outdoor.png", "/static/img/usagi_happy.png"],//10~29
-      ["/static/img/usagi_play.png", "/static/img/usagi_real.png", "/static/img/usagi_eat.png", "/static/img/usagi_study.png"]//30~
+      ["/static/img/usagi_normal.png", "/static/img/usagi_good.png", "/static/img/usagi_sleep.png"], //好感度0~9
+      ["/static/img/usagi_what.png", "/static/img/usagi_relax.png",  "/static/img/usagi_clean.png"],//10~19
+      ["/static/img/usagi_study.png", "/static/img/usagi_outdoor.png", "/static/img/usagi_happy.png"],//20~29
+      ["/static/img/usagi_real.png", "/static/img/usagi_eat.png", "/static/img/usagi_play.png"]//30~
     ];
-    img.src = imgList[1][0];
 
     // メッセージリスト
-    const reminder_messages = [ "リマインダーをとうろくしたよ！", "リマインダーをうわがきしたよ！", "リマインダーをけしたよ！"];
+    const reminder_messages = [ "よていをとうろくしたよ！", "よていをうわがきしたよ！", "よていをけしたよ！"];
 
-    const messages = [ "ぴょんぴょん🐰", "きょうもがんばってえらい！", "zzz...", "よてい、わすれてない？📅",//好感度0~10
-                       "おやすみもだいじ～", "おそうじしよっと...", "おでかけするのすき？", "たのしいことあった？",//11~20
-                       "ぼくやきゅうすきなんだ！" , "！！！！！！！！！！", "おやつたべた？🥕", "おべんきょうもしなくちゃね",//21~30
+    const messages = [ "ぴょんぴょん🐰", "きょうもがんばってえらい！", "zzz...", //0~9
+                       "よてい、わすれてない？📅", "おやすみもだいじ～", "おそうじしよっと...", //10~19
+                       "おべんきょうもしなくちゃね", "おでかけするのすき？", "たのしいことあった？",//20~19
+                       "！！！！！！！！！！", "おやつたべた？🥕", "ぼくやきゅうすきなんだ！"//30~
     ];
     msgBox.textContent  = [];
 
@@ -89,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function setImageByLike() {
       const available = getLike();
       const availableList = imgList.slice(1, available + 1).flat();
-      console.log(availableList)
       if(availableList.length > 0){
         var random = Math.floor(Math.random() * availableList.length);
         var current = img.src.split('/').pop();
