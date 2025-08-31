@@ -230,7 +230,9 @@
 }
 
 body {
-  font-family: "Zen Maru Gothic", "Rounded M+ 1c", "Noto Sans JP", sans-serif;
+  font-family: "Zen Maru Gothic", "Rounded M+ 1c", "Noto Sans JP",
+    "Sawarabi Gothic", "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", cursive,
+    sans-serif;
   background-color: #fffafc;
   color: #444;
 }
@@ -239,6 +241,32 @@ h1,
 h2 {
   color: #e91e63;
   text-align: center;
+}
+
+h1,
+h2,
+.usagi-font {
+  font-family: "Zen Maru Gothic", "M PLUS Rounded 1c", "Sawarabi Gothic",
+    "Hiragino Maru Gothic ProN", cursive, sans-serif;
+  letter-spacing: 2px;
+}
+
+.calendar-font {
+  font-family: "Noto Sans JP", "M PLUS Rounded 1c", "Sawarabi Gothic",
+    "Hiragino Maru Gothic ProN", sans-serif;
+  letter-spacing: 1px;
+}
+
+th,
+td,
+.btn,
+.rabbit-message,
+.usagi-message,
+.today-box,
+#todayList,
+.reminder-item {
+  font-family: "Zen Maru Gothic", "M PLUS Rounded 1c", "Sawarabi Gothic",
+    "Hiragino Maru Gothic ProN", cursive, sans-serif;
 }
 
 .today-cell {
@@ -323,4 +351,21 @@ h2 {
   font-family: "Noto Sans JP", sans-serif;
   color: #555;
   font-size: 2.5rem;
+}
+
+.cute-notify-btn {
+  background: linear-gradient(90deg, #ffb6c1 0%, #ff69b4 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 28px;
+  font-size: 1.1em;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+.cute-notify-btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0 4px 16px rgba(255, 182, 193, 0.4);
 }

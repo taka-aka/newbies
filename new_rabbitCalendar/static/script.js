@@ -337,6 +337,16 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("click", (event) => {
     if (event.target === modal) modal.style.display = "none";
   });
+
+  const notifyBtn = document.getElementById("permission-btn");
+  if (notifyBtn) {
+    notifyBtn.addEventListener("click", function () {
+      // 通知許可の処理（既存処理があればそのまま）
+      // ...既存の通知許可処理...
+      // ボタンを消す
+      notifyBtn.style.display = "none";
+    });
+  }
 });
 
 function sortList(reminders) {

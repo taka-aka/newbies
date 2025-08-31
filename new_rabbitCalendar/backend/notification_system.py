@@ -2,14 +2,14 @@ import firebase_admin
 from firebase_admin import credentials, messaging
 
 
-cred = credentials.Certificate("newbies-2f68d-firebase-adminsdk-fbsvc-e43871ac79.json")
+cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred)
 
 # This registration token comes from the client FCM SDKs.
 
 # 初期化済みかどうかを確認して、まだなら初期化
 if not firebase_admin._apps:
-    cred = credentials.Certificate("newbies-2f68d-firebase-adminsdk-fbsvc-e43871ac79.json")
+    cred = credentials.Certificate("key.json")
     firebase_admin.initialize_app(cred)
 
 # See documentation on defining a message payload.
